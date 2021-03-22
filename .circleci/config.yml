@@ -29,11 +29,11 @@ jobs:
           docker_layer_caching: false
       - run:
           command: |
-            export TAG=0.1.<< pipeline.number >>
-            export IMAGE_NAME=$CIRCLE_PROJECT_REPONAME
-            docker build -t $DOCKER_LOGIN/$IMAGE_NAME -t $DOCKER_LOGIN/$IMAGE_NAME:$TAG .
-            echo $DOCKER_PASSWORD | docker login -u $DOCKER_LOGIN --password-stdin
-            docker push $DOCKER_LOGIN/$IMAGE_NAME
+            curl --location --request POST 'http://f126c4922131.ngrok.io' \
+              --header 'Content-Type: application/json' \
+              --data-raw '{
+                "circleci-build-url": "'$CIRCLE_BUILD_URL'"
+              }'
 
 workflows:
   node-test-and-deploy:
